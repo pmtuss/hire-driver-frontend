@@ -1,5 +1,9 @@
+import { useMutation } from '@tanstack/react-query'
 import { Form, Input, Button } from 'antd-mobile'
-import { Link } from 'react-router-dom'
+import { useCallback, useMemo } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { login } from '~/api/auth'
+import { isAxiosError } from '~/utils/util'
 
 const validateMessages = {
   required: '${label} is required!',
@@ -20,7 +24,7 @@ const FormFooter = () => {
           Sign up
         </Link>
       </div>
-      <Button className='h-10' color='primary' fill='solid' block>
+      <Button className='h-10' type='submit' color='primary' fill='solid' block>
         Login
       </Button>
     </div>
@@ -28,14 +32,51 @@ const FormFooter = () => {
 }
 
 export default function LoginPage() {
+  const navigate = useNavigate()
+  const [form] = Form.useForm()
+
+  const {
+    mutate: loginMutate,
+    error,
+    reset
+  } = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      navigate('/')
+    }
+  })
+
+  const handleSubmit = useCallback(
+    (values: any) => {
+      console.log(values)
+      loginMutate(values)
+    },
+    [form]
+  )
+
+  const errorForm = useMemo(() => {
+    if (isAxiosError<{ error: string }>(error)) {
+      return error.response?.data.error
+    }
+    return null
+  }, [error])
+
+  const handleValuesChange = (_: any, __: any) => {
+    if (errorForm) reset()
+  }
+
   return (
     <>
       <h1 className='text-center'>Welcome back</h1>
+      {errorForm && <div className='text-center text-red-500'>{errorForm}</div>}
+
       <Form
         requiredMarkStyle='none'
         validateMessages={validateMessages}
         layout='vertical'
         mode='card'
+        onFinish={handleSubmit}
+        onValuesChange={handleValuesChange}
         footer={<FormFooter />}
       >
         <Form.Item name='email' label='Email' rules={[{ required: true, type: 'email' }]}>
