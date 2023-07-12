@@ -41,8 +41,12 @@ export default function LoginPage() {
     reset
   } = useMutation({
     mutationFn: login,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token)
       navigate('/')
+    },
+    onError: (error) => {
+      alert(error)
     }
   })
 

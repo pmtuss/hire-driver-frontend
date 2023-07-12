@@ -41,7 +41,8 @@ export default function RegisterPage() {
     reset
   } = useMutation({
     mutationFn: register,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token)
       navigate('/')
     }
   })

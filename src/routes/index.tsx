@@ -1,5 +1,6 @@
 import AuthLayout from '~/layouts/AuthLayout'
 import MainLayout from '~/layouts/MainLayout'
+import NotFound from '~/pages/NotFound'
 import LoginPage from '~/pages/auth/Login'
 import RegisterPage from '~/pages/auth/Register'
 import AccountPage from '~/pages/main/Account'
@@ -46,5 +47,10 @@ export const privateRoutes = [
     name: 'Account',
     element: AccountPage,
     layout: MainLayout
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    element: NotFound
   }
 ]
