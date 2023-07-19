@@ -4,22 +4,28 @@ import { InteractiveMapProps } from '@goongmaps/goong-map-react/src/components/i
 
 import config from '~/configs/config'
 
+const inititalViewport = {
+  latitude: 21.026975,
+  longitude: 105.85346,
+  zoom: 15
+}
+
 interface GoongMapProps extends InteractiveMapProps {
   // onLoad: Function
+  autoGeolocate?: boolean
+  initViewport?: ViewportProps
 }
 
 const GoongMap: FC<GoongMapProps> = (props) => {
-  const { onLoad, children } = props
+  const { onLoad, children, onViewportChange, initViewport = inititalViewport, autoGeolocate = true } = props
   const { tileKey } = config.map
 
-  const [viewport, setViewport] = useState<ViewportProps>({
-    latitude: 21.026975,
-    longitude: 105.85346,
-    zoom: 15
-  })
+  const [viewport, setViewport] = useState<ViewportProps>(initViewport)
 
   const handleViewPortChange = (viewport: ViewportProps) => {
     setViewport((prev) => ({ ...prev, ...viewport }))
+
+    onViewportChange?.(viewport)
   }
 
   return (
@@ -32,8 +38,8 @@ const GoongMap: FC<GoongMapProps> = (props) => {
       onLoad={onLoad}
     >
       <GeolocateControl
-        auto={true}
-        style={{ right: 10, bottom: 100 }}
+        auto={autoGeolocate}
+        style={{ right: 10, bottom: 150 }}
         // className='w-10 h-10'
         positionOptions={{ enableHighAccuracy: true }}
         onGeolocate={(location: any) => {
@@ -42,6 +48,7 @@ const GoongMap: FC<GoongMapProps> = (props) => {
         onViewStateChange={(viewport: any) => {
           // console.log(viewport);
         }}
+        className='h-10 w-10 rounded-full'
       />
       {children}
     </GoongMapReact>

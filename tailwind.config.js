@@ -4,7 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        'gray-light': '#F6F6F6'
+        primary: '#1677ff',
+        'gray-light': '#F6F6F6',
+        secondary: '#666666',
+        danger: 'var(--adm-color-danger)'
       }
     }
   },

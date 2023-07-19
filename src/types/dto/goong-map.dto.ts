@@ -80,3 +80,33 @@ export interface DirectionRequestDto {
   origin: ICoordinate
   destination: ICoordinate
 }
+
+export interface DirectionResponseDto {
+  geocoded_waypoints: Array<{ geocoder_satus: string; place_id: string }>
+  routes: Array<{
+    overview_polyline: { points: string }
+    legs: Array<{
+      distance: { text: string; value: number }
+
+      duration: { text: string; value: number }
+      end_address: string
+      end_location: ICoordinate
+      start_address: string
+      start_location: ICoordinate
+
+      step: Array<{
+        distance: { text: string; value: number }
+
+        duration: { text: string; value: number }
+        end_location: ICoordinate
+        start_location: ICoordinate
+        html_instructions: string
+        maneuver: string
+        travel_mode: string
+        polyline: {
+          points: string
+        }
+      }>
+    }>
+  }>
+}

@@ -1,3 +1,4 @@
+import { Toast } from 'antd-mobile'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import config from '~/configs/config'
 
@@ -19,6 +20,11 @@ http.interceptors.request.use(
     if (token) {
       configs.headers.Authorization = `Bearer ${token}`
     }
+    if (['post', 'put', 'delete'].includes(configs.method as string)) {
+      Toast.show({
+        icon: 'loading'
+      })
+    }
     return configs
   },
   (err) => {
@@ -38,7 +44,7 @@ http.interceptors.response.use(
     if (error.response.status === 401) {
       logout()
     }
-    return Promise.reject(error)
+    return Promise.reject(error.response.data)
   }
 )
 

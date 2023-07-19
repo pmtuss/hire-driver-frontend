@@ -9,6 +9,7 @@ export default function useLoggedIn() {
 
   const accessToken = localStorage.getItem('token')
 
+  console.log({ accessToken })
   useEffect(() => {
     if (!accessToken) setIsLoggedIn(false)
     else {

@@ -4,9 +4,10 @@ import classnames from 'classnames'
 
 import './index.css'
 import { debounce } from 'lodash'
-import { useMutation } from '@tanstack/react-query'
-import { getAutoComplete, getPlaceDetail } from '~/api/goong-map'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { getAddressByCoordinate, getAutoComplete, getPlaceDetail } from '~/api/goong-map'
 import { AddressPrediction } from '~/types/dto/goong-map.dto'
+import { getAddresses } from '~/api/address'
 
 interface SearchInput2Props {
   value?: string
@@ -22,11 +23,21 @@ const SearchInput2: FC<SearchInput2Props> = (props) => {
   const [isFocus, setIsFocus] = useState<boolean>(false)
   const [visible, setVisible] = useState<boolean>(false)
 
-  const { mutate, data, isLoading } = useMutation({
+  const {
+    mutate,
+    data,
+    isLoading,
+    reset: resetPredict
+  } = useMutation({
     mutationFn: getAutoComplete,
     onSuccess: (data) => {
       console.log({ data })
     }
+  })
+
+  const { data: myAdds } = useQuery({
+    queryKey: ['addresses'],
+    queryFn: getAddresses
   })
 
   const {} = useMutation({
@@ -45,13 +56,14 @@ const SearchInput2: FC<SearchInput2Props> = (props) => {
   const handleChange = useCallback(
     (value: string) => {
       onChange?.(value)
+      resetPredict()
       if (value && value.length >= 3) searchAddress(value)
     },
     [onChange]
   )
 
   const handleSelect = useCallback(
-    (value: AddressPrediction) => {
+    (value: any) => {
       onSelect?.(value)
       setVisible(false)
     },
@@ -71,6 +83,32 @@ const SearchInput2: FC<SearchInput2Props> = (props) => {
       setIsFocus(false)
     }, 300)
   }, [])
+
+  const { mutateAsync: getAddByCoord } = useMutation({
+    mutationFn: getAddressByCoordinate
+  })
+
+  const getCurrentPosition = () => {
+    const showPosition = (position: any) => {
+      const coord = position.coords
+      getAddByCoord({
+        lat: coord.latitude,
+        lng: coord.longitude
+      }).then((res) => {
+        const add = res[0]
+        handleSelect({
+          compound: add.compound,
+          formatted_address: add.formatted_address,
+          location: add.geometry.location,
+          name: add.name,
+          place_id: add.place_id
+        })
+      })
+    }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition)
+    }
+  }
 
   return (
     <div
@@ -112,6 +150,33 @@ const SearchInput2: FC<SearchInput2Props> = (props) => {
                 </List.Item>
               )}
 
+              {myAdds && !data && (
+                <>
+                  <List.Item
+                    arrow={false}
+                    onClick={() => {
+                      getCurrentPosition()
+                    }}
+                  >
+                    <div className='py-2'>Choose your location</div>
+                  </List.Item>
+                  {myAdds.map((item, index) => {
+                    return (
+                      <List.Item
+                        key={item._id}
+                        arrow={false}
+                        onClick={() => {
+                          handleSelect(item)
+                        }}
+                      >
+                        <div className='font-bold'>{item.name}</div>
+                        <Ellipsis className='' direction='end' content={item.formatted_address} />
+                      </List.Item>
+                    )
+                  })}
+                </>
+              )}
+
               {!isLoading &&
                 data &&
                 data.map((item, index) => {
@@ -123,8 +188,8 @@ const SearchInput2: FC<SearchInput2Props> = (props) => {
                       }}
                       arrow={false}
                     >
-                      <div className='font-bold'>{item.structured_formatting.main_text}</div>
-                      <Ellipsis direction='end' content={item.description} />
+                      {/* <div className='font-bold'>{item.structured_formatting.main_text}</div> */}
+                      <Ellipsis className='py-2' direction='end' content={item.formatted_address} />
                       {/* <div className=''>{item.description}</div> */}
                     </List.Item>
                   )

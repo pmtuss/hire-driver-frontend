@@ -6,7 +6,8 @@ import {
   AutoCompleteRequestDto,
   AutoCompleteResponseDto,
   PlaceDetailResponseDto,
-  DirectionRequestDto
+  DirectionRequestDto,
+  DirectionResponseDto
 } from '~/types/dto/goong-map.dto'
 import { coordinateToLocationText } from '~/utils/util'
 
@@ -43,7 +44,15 @@ export const getAutoComplete = async (request: AutoCompleteRequestDto) => {
     params: { input, limit }
   })
 
-  return data.predictions
+  const returnValue = data.predictions.map((add, index) => {
+    return {
+      compound: add.compound,
+      formatted_address: add.description,
+      place_id: add.place_id
+    }
+  })
+  // return data.predictions
+  return returnValue
 }
 
 // Get Place detail by place_id
@@ -57,7 +66,7 @@ export const getPlaceDetail = async (place_id: string) => {
   const address: IAddress = {
     place_id: result.place_id,
     location: result.geometry.location,
-    description: result.formatted_address,
+    formatted_address: result.formatted_address,
     compound: result.compound,
     name: ''
   }
@@ -72,6 +81,9 @@ export const getAddressByCoordinate = async (coordinate: ICoordinate) => {
   const data = await http.get(`${FEATURES.GEOCODE}`, {
     params: { latlng: `${lat},${lng}` }
   })
+  // const result = data.data.results
+
+  // return
 
   return data.data.results
 }
@@ -83,8 +95,8 @@ export const getDirection = async (request: DirectionRequestDto) => {
   const originText = coordinateToLocationText(origin)
   const destinationText = coordinateToLocationText(destination)
 
-  const data = await get(`${FEATURES.DIRECTION}`, {
-    params: { origin: originText, destination: destinationText }
+  const data = await get<DirectionResponseDto>(`${FEATURES.DIRECTION}`, {
+    params: { origin: originText, destination: destinationText, alternatives: true }
   })
 
   return data

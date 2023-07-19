@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { Form, Input, Button } from 'antd-mobile'
+import { Form, Input, Button, Toast } from 'antd-mobile'
 import { useCallback, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { login } from '~/api/auth'
@@ -15,7 +15,7 @@ const validateMessages = {
   }
 }
 
-const FormFooter = () => {
+const FormFooter = ({ isLoading }: { isLoading?: boolean }) => {
   return (
     <div className=''>
       <div className='text-center py-2'>
@@ -24,7 +24,7 @@ const FormFooter = () => {
           Sign up
         </Link>
       </div>
-      <Button className='h-10' type='submit' color='primary' fill='solid' block>
+      <Button loading={isLoading} className='h-10' type='submit' color='primary' fill='solid' block>
         Login
       </Button>
     </div>
@@ -38,29 +38,32 @@ export default function LoginPage() {
   const {
     mutate: loginMutate,
     error,
+    isLoading,
     reset
   } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
       localStorage.setItem('token', data.token)
-      navigate('/')
+      Toast.clear()
+      setTimeout(() => {
+        navigate('/')
+      }, 100)
     },
-    onError: (error) => {
-      alert(error)
+    onError: (error: any) => {
+      Toast.clear()
     }
   })
 
   const handleSubmit = useCallback(
     (values: any) => {
-      console.log(values)
       loginMutate(values)
     },
     [form]
   )
 
   const errorForm = useMemo(() => {
-    if (isAxiosError<{ error: string }>(error)) {
-      return error.response?.data.error
+    if (error) {
+      return error.error || error.message
     }
     return null
   }, [error])
@@ -81,7 +84,7 @@ export default function LoginPage() {
         mode='card'
         onFinish={handleSubmit}
         onValuesChange={handleValuesChange}
-        footer={<FormFooter />}
+        footer={<FormFooter isLoading={isLoading} />}
       >
         <Form.Item name='email' label='Email' rules={[{ required: true, type: 'email' }]}>
           <Input placeholder='example@gmail.com' clearable />
