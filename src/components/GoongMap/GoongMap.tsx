@@ -7,17 +7,26 @@ import config from '~/configs/config'
 const inititalViewport = {
   latitude: 21.026975,
   longitude: 105.85346,
-  zoom: 15
+  zoom: 15,
+  maxZoom: 20
 }
 
 interface GoongMapProps extends InteractiveMapProps {
   // onLoad: Function
   autoGeolocate?: boolean
   initViewport?: ViewportProps
+  geolocateStyle?: React.CSSProperties
 }
 
 const GoongMap: FC<GoongMapProps> = (props) => {
-  const { onLoad, children, onViewportChange, initViewport = inititalViewport, autoGeolocate = true } = props
+  const {
+    onLoad,
+    children,
+    onViewportChange,
+    geolocateStyle,
+    initViewport = inititalViewport,
+    autoGeolocate = true
+  } = props
   const { tileKey } = config.map
 
   const [viewport, setViewport] = useState<ViewportProps>(initViewport)
@@ -39,7 +48,7 @@ const GoongMap: FC<GoongMapProps> = (props) => {
     >
       <GeolocateControl
         auto={autoGeolocate}
-        style={{ right: 10, bottom: 150 }}
+        style={{ right: 10, bottom: 150, ...geolocateStyle }}
         // className='w-10 h-10'
         positionOptions={{ enableHighAccuracy: true }}
         onGeolocate={(location: any) => {

@@ -1,30 +1,24 @@
 import { Layer, MapContext, Source } from '@goongmaps/goong-map-react'
 import { useContext, useEffect, useMemo, useState } from 'react'
-import { DirectionResponseDto } from '~/types/dto/goong-map.dto'
 import { getBoundingOfRoute, polylineStringToGeoJson } from '~/utils/util'
 
 import { Position } from 'geojson'
 
-interface DirectionRenderProps {
-  directions: DirectionResponseDto
-  color?: string | undefined
+interface IProps {
+  polylineString: string
+  sourceId?: string
+  color?: string
 }
 
-const DirectionRender: React.FC<DirectionRenderProps> = (props) => {
+const DirectionRenderWithRoute: React.FC<IProps> = (props) => {
   const [coordinates, setCoordinates] = useState<Position[]>([])
-  const { directions, color = '#0384fc' } = props
+  const { polylineString, sourceId = 'route', color = '#0384fc' } = props
 
   const context = useContext(MapContext)
 
   const data = useMemo(() => {
-    // console.log({ directions })
-    const { overview_polyline } = directions.routes[0]
-
-    // encoded polyline string
-    const { points } = overview_polyline
-
     // geoJson from encoded polyline string
-    const geoJson = polylineStringToGeoJson(points)
+    const geoJson = polylineStringToGeoJson(polylineString)
 
     setCoordinates(geoJson.coordinates)
 
@@ -37,14 +31,14 @@ const DirectionRender: React.FC<DirectionRenderProps> = (props) => {
     }
 
     return sourceData
-  }, [directions])
+  }, [polylineString])
 
   // Line String layer style
   const layerStyle = useMemo(
     () => ({
-      id: 'route',
+      id: sourceId,
       type: 'line' as const,
-      source: 'route',
+      source: sourceId,
       layout: {
         'line-join': 'round',
         'line-cap': 'round'
@@ -72,17 +66,16 @@ const DirectionRender: React.FC<DirectionRenderProps> = (props) => {
       ...viewport,
       longitude: newCameraTransform.center.lng,
       latitude: newCameraTransform.center.lat,
-      zoom: newCameraTransform.zoom,
-      maxZoom: 20
+      zoom: newCameraTransform.zoom
       // transitionDuration: 2000
     })
   }, [coordinates])
 
   return (
-    <Source id='route' type='geojson' data={data as any}>
+    <Source id={sourceId} type='geojson' data={data as any}>
       <Layer {...layerStyle} />
     </Source>
   )
 }
 
-export default DirectionRender
+export default DirectionRenderWithRoute

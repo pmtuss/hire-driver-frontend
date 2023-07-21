@@ -5,3 +5,8 @@ export enum TripStatus {
   Finish = 'finish',
   Cancel = 'cancel'
 }
+
+export enum UserRoles {
+  PASSENGER = 'USER',
+  DRIVER = 'DRIVER'
+}

@@ -1,5 +1,6 @@
 import AuthLayout from '~/layouts/AuthLayout'
 import BackLayout from '~/layouts/BackLayout'
+import DriverLayout from '~/layouts/DriverLayout'
 import MainLayout from '~/layouts/MainLayout'
 import NotFound from '~/pages/NotFound'
 import AddressPage from '~/pages/account/Address'
@@ -10,6 +11,8 @@ import VehiclePage from '~/pages/account/Vehicle'
 import NewVehiclePage from '~/pages/account/Vehicle/new'
 import LoginPage from '~/pages/auth/Login'
 import RegisterPage from '~/pages/auth/Register'
+import DriverHomePage from '~/pages/driver/Home'
+import RidesPage from '~/pages/driver/Rides'
 import AccountPage from '~/pages/main/Account'
 import BookingPage from '~/pages/main/Booking'
 import HistoryPage from '~/pages/main/History'
@@ -102,6 +105,37 @@ export const privateRoutes = [
     name: 'Update address',
     element: AddressNewPage,
     layout: BackLayout
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    element: LogoutPage
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    element: NotFound
+  }
+]
+
+export const driverPrivateRoutes = [
+  {
+    path: '/',
+    name: 'Home',
+    element: DriverHomePage,
+    layout: DriverLayout
+  },
+  {
+    path: '/rides',
+    name: 'Rides',
+    element: RidesPage,
+    layout: DriverLayout
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    element: ProfilePage,
+    layout: DriverLayout
   },
   {
     path: '/logout',

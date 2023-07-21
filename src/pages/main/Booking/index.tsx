@@ -166,6 +166,7 @@ export default function BookingPage() {
       cost,
       route: directionsData?.routes[0].overview_polyline.points as string
     }
+
     mutateCreateTrip(sendData)
   }
 
