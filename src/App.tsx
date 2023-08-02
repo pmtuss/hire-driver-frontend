@@ -9,6 +9,7 @@ import { UserRoles } from './constants/enum'
 
 import io from 'socket.io-client'
 import { useSocket } from './stores/socket.store'
+import config from './configs/config'
 
 function App() {
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ function App() {
   }, [accessToken])
 
   useEffect(() => {
-    const socket = io('http://localhost:4000', {
+    const socket = io(config.serverUrl, {
       auth: { token: accessToken }
     })
 
