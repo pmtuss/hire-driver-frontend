@@ -13,4 +13,4 @@ export interface IAddress {
 }
 
 export interface CreateAddressRequestDto
-  extends Pick<IAddress, 'place_id' | 'formatted_address' | 'isDefault' | 'location' | 'name' | 'compound'> {}
+  extends Pick<IAddress, 'formatted_address' | 'isDefault' | 'location' | 'name'> {}

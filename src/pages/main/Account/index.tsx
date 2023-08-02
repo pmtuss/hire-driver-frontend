@@ -10,22 +10,22 @@ import { getProfile } from '~/api/user'
 const items = [
   {
     path: '/profile',
-    name: 'Profile',
+    name: 'Thông tin cá nhân',
     prefix: <ContentOutline fontSize={24} />
   },
   {
     path: '/vehicles',
-    name: 'Vehicles',
+    name: 'Phương tiện',
     prefix: <TruckOutline fontSize={24} />
   },
   {
     path: '/addresses',
-    name: 'Your Addresses',
+    name: 'Địa chỉ của bạn',
     prefix: <EnvironmentOutline fontSize={24} />
   },
   {
     path: '/logout',
-    name: 'Logout',
+    name: 'Đăng xuất',
     prefix: <CloseCircleOutline fontSize={24} />
   }
 ]
@@ -41,16 +41,12 @@ export default function AccountPage() {
   return (
     <Space direction='vertical' block>
       <Space direction='vertical' align='center' block className='bg-primary text-white py-4'>
-        <div className='h-14 w-14  rounded-full '>
-          <img src={DefaultPicture} alt='' className='h-full w-full object-cover rounded-full' />
+        <div className='h-16 w-16  rounded-full p-1 bg-white '>
+          <img src={data?.avatar || DefaultPicture} alt='' className='h-full w-full object-cover rounded-full' />
         </div>
         <div className='flex flex-col gap-1 items-center'>
           <div className='text-base font-semibold'>{data?.name}</div>
           <div className=''>{data?.phone}</div>
-          <div className='flex justify-center gap-0.5 text-yellow-300'>
-            4.5
-            <StarFill />
-          </div>
         </div>
       </Space>
 

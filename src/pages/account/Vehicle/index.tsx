@@ -65,7 +65,7 @@ export default function VehiclePage() {
           className='text-base add-item'
           onClick={() => navigate('new')}
         >
-          Add new car
+          Thêm mới
         </List.Item>
       </List>
     </>

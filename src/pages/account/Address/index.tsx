@@ -56,7 +56,7 @@ export default function AddressPage() {
           className='text-base add-item'
           onClick={() => navigate('new')}
         >
-          Add new address
+          Thêm mới
         </List.Item>
       </List>
     </>

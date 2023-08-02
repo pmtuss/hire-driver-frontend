@@ -1,5 +1,5 @@
 import { TabBar, TabBarProps } from 'antd-mobile'
-import { AppOutline, TravelOutline, UnorderedListOutline, UserOutline } from 'antd-mobile-icons'
+import { AppOutline, HistogramOutline, TravelOutline, UnorderedListOutline, UserOutline } from 'antd-mobile-icons'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function MTabBar(props: TabBarProps) {
@@ -10,24 +10,24 @@ export default function MTabBar(props: TabBarProps) {
   const navigate = useNavigate()
 
   const tabs = [
+    // {
+    //   key: '/',
+    //   icon: <AppOutline />,
+    //   title: 'Home'
+    // },
     {
       key: '/',
-      icon: <AppOutline />,
-      title: 'Home'
-    },
-    {
-      key: '/booking',
       icon: <TravelOutline />,
-      title: 'Booking'
+      title: 'Đặt chuyến đi'
     },
     {
       key: '/history',
-      title: 'History',
-      icon: <UnorderedListOutline />
+      title: 'Lịch sử',
+      icon: <HistogramOutline />
     },
     {
       key: '/account',
-      title: 'Account',
+      title: 'Tài khoản',
       icon: <UserOutline />
     }
   ]

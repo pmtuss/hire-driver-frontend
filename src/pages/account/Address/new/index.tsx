@@ -133,8 +133,8 @@ export default function AddressNewPage() {
 
       setAddress({
         formatted_address: first.formatted_address,
-        place_id: first.place_id,
-        compound: first.compound,
+        // place_id: first.place_id,
+        // compound: first.compound,
         location: first.geometry.location,
         name: name,
         isDefault: isDefault
@@ -156,7 +156,7 @@ export default function AddressNewPage() {
       Toast.show({
         icon: 'success',
         duration: 1000,
-        content: 'Created successfully',
+        content: 'Thêm mới thành công',
         afterClose() {
           navigate(-1)
         }
@@ -170,7 +170,7 @@ export default function AddressNewPage() {
       Toast.show({
         icon: 'success',
         duration: 1000,
-        content: 'Updated successfully',
+        content: 'Cập nhật thành công',
         afterClose() {
           navigate(-1)
         }
@@ -206,7 +206,7 @@ export default function AddressNewPage() {
     onSuccess: () => {
       Toast.show({
         icon: 'success',
-        content: 'Delete successfully',
+        content: 'Xoá thành công',
         duration: 1000,
         afterClose: () => navigate(-1)
       })
@@ -268,7 +268,7 @@ export default function AddressNewPage() {
           }}
           overLayStyle={{ width: '100%', height: 'auto', bottom: 40, top: 'auto' }}
         >
-          Confirm
+          Xác nhận
         </OverLayButton>
 
         {isEditMode && (
@@ -276,20 +276,19 @@ export default function AddressNewPage() {
             buttonProps={{
               color: 'danger',
               block: true,
-              fill: 'outline',
               className: 'bg-white',
               onClick: () => {
                 Dialog.confirm({
-                  content: 'Delete this address?',
-                  confirmText: <span className='text-danger'>Delete</span>,
-                  cancelText: 'Cancel',
+                  content: 'Xoá địa chỉ này?',
+                  confirmText: <span className='text-danger'>Xoá</span>,
+                  cancelText: 'Đóng',
                   onConfirm: () => mutateDeleteAddress(id as string)
                 })
               }
             }}
-            overLayStyle={{ width: '100%', height: 'auto', bottom: 100, top: 'auto' }}
+            overLayStyle={{ width: '100%', height: 'auto', bottom: 90, top: 'auto' }}
           >
-            Delete
+            Xoá địa chỉ
           </OverLayButton>
         )}
       </GoongMap>
@@ -299,13 +298,13 @@ export default function AddressNewPage() {
           w-4/6 py-4 px-4 text-sm
         '
         >
-          <div>Name</div>
+          <div>Tên</div>
           <div className='px-3 border border-solid rounded-md py-1 my-2'>
             <Input value={name} onChange={(val) => setName(val)} style={{ '--font-size': '15px' }} clearable />
           </div>
 
           <div className='flex justify-between items-center mb-2'>
-            <div className=''>Set is default</div>
+            <div className=''>Đặt làm mặc định</div>
             <Switch
               checked={isDefault}
               onChange={(checked) => setIsDefault(checked)}
@@ -315,7 +314,7 @@ export default function AddressNewPage() {
           </div>
           <div className=''>
             <Button block color='primary' size='small' onClick={handleAdd}>
-              {isEditMode ? 'Update' : 'Create'}
+              {isEditMode ? 'Cập nhật' : 'Thêm'}
             </Button>
           </div>
         </div>

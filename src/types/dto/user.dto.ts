@@ -8,4 +8,11 @@ export interface UserProfileResponse {
   email: string
   dob: string
   phone: string
+  avatar: string
+}
+
+export interface UserInfo {
+  name: string
+  phone: string
+  avatar: string
 }

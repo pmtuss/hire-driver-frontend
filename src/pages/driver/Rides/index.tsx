@@ -1,30 +1,41 @@
 import { Button, Ellipsis, FloatingPanel, Switch, Toast } from 'antd-mobile'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import GoongMap from '~/components/GoongMap/GoongMap'
-import DefaultPicture from '~/assets/default.png'
 import { ExclamationShieldFill, LocationFill, StarOutline } from 'antd-mobile-icons'
 
-import { trips } from './data'
-import { Marker, Popup } from '@goongmaps/goong-map-react'
+import { Marker } from '@goongmaps/goong-map-react'
 import { formatMoney } from '~/utils/util'
 import DirectionRenderWithRoute from '~/components/GoongMap/DirectionRenderWithRoute'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { getDirection } from '~/api/goong-map'
 import useGeolocation from '~/hooks/useGeolocation'
 import { ICoordinate } from '~/types/dto/goong-map.dto'
 import DirectionRender from '~/components/GoongMap/DirectionRender'
 import { useDriverStore } from '~/stores/driver.store'
+import { useSocket } from '~/stores/socket.store'
+import { TripStatus } from '~/constants/enum'
+import { acceptTrip, getAcceptableTrips } from '~/api/trip'
+import { getUserInfo } from '~/api/user'
 
-const anchors = [150, window.innerHeight * 0.3]
+const anchors = [200]
 
 export default function RidesPage() {
+  const { socket } = useSocket()
+
   const [currentLocation] = useGeolocation()
   // const [trip, setTrip] = useState<any>()
-  const { trip, setTrip } = useDriverStore((state) => state)
-  const { isOnline, setIsOnline } = useDriverStore((state) => state)
-  const { tripStatus, setTripStatus } = useDriverStore((state) => state)
-  // const [isOnline, setIsOnline] = useState(false)
-  // const [status, setStatus] = useState('')
+  const [trips, setTrips] = useState<any[]>([])
+
+  const {
+    trip,
+    setTrip,
+
+    isOnline,
+    setIsOnline,
+
+    tripStatus,
+    setTripStatus
+  } = useDriverStore((state) => state)
 
   const {
     mutate: mutateGetDirection,
@@ -33,19 +44,51 @@ export default function RidesPage() {
   } = useMutation({
     mutationFn: getDirection,
     onSuccess: (data) => {
-      console.log(data)
+      socket?.emit('acceptTrip', {
+        passenger: trip.passengerId,
+        driverLocation: currentLocation,
+        route: data.routes[0].overview_polyline.points
+      })
     }
   })
 
-  const handleAccept = () => {
-    setTripStatus('started')
+  const getUserInfoQuery = useQuery({
+    queryKey: ['users', trip?.passenger],
+    queryFn: () => getUserInfo(trip?.passenger),
+    enabled: !!trip
+  })
 
-    // if (currentLocation && trip) {
-    //   mutateGetDirection({
-    //     origin: currentLocation as ICoordinate,
-    //     destination: trip.origin
-    //   })
-    // }
+  const acceptTripMutation = useMutation({
+    mutationFn: () => acceptTrip(trip._id),
+    onSuccess: (data) => {
+      setTripStatus(TripStatus.ACCEPTED)
+    },
+    onError: (error: any) => {
+      Toast.show({
+        icon: 'fail',
+        content: error.error
+      })
+      resetDirection()
+      setTrip(undefined)
+      setTrips([...trips.filter((item) => item._id != trip._id)])
+    }
+  })
+
+  const { mutate: mutateGetAcceptableTrips } = useMutation({
+    mutationFn: getAcceptableTrips,
+    onSuccess: (data) => {
+      setTrips(data)
+    }
+  })
+
+  useEffect(() => {
+    if (tripStatus === '') {
+      mutateGetAcceptableTrips()
+    }
+  }, [tripStatus])
+
+  const handleAccept = () => {
+    acceptTripMutation.mutate()
   }
 
   const handleCancel = () => {
@@ -54,11 +97,57 @@ export default function RidesPage() {
   }
 
   useEffect(() => {
-    if (tripStatus === 'started' && currentLocation && trip) {
+    if (socket) {
+      socket?.on('new-ride-request', (data) => {
+        setTrips([...trips, data])
+      })
+    }
+  }, [socket])
+
+  useEffect(() => {
+    return () => {
+      socket?.off('new-ride-request')
+    }
+  }, [])
+
+  const handleToggleOnline = (online: boolean) => {
+    setIsOnline(online)
+    if (online) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          socket?.emit('driver-connect', { latitude: position.coords.latitude, longitude: position.coords.longitude })
+        })
+      }
+    } else {
+      socket?.emit('driver-disconnect', 'disconnect')
+    }
+  }
+
+  useEffect(() => {
+    if (tripStatus === TripStatus.ACCEPTED && currentLocation && trip) {
       mutateGetDirection({
         origin: currentLocation as ICoordinate,
         destination: trip.origin
       })
+    }
+
+    if (tripStatus !== TripStatus.ACCEPTED || !trip) return
+    const timer = setInterval(() => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          socket?.emit('updateDriverLocation', {
+            passengerId: trip.passenger,
+            location: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            }
+          })
+        })
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(timer)
     }
   }, [tripStatus, currentLocation, trip])
 
@@ -78,24 +167,35 @@ export default function RidesPage() {
 
         {trip && (
           <>
-            <DirectionRenderWithRoute sourceId='1111' polylineString={trip.route} />
+            {tripStatus !== TripStatus.ACCEPTED && (
+              <>
+                <DirectionRenderWithRoute sourceId='1111' polylineString={trip.route} />
+                <Marker
+                  longitude={trip.destination.lng}
+                  latitude={trip.destination.lat}
+                  offsetLeft={-15}
+                  offsetTop={-30}
+                >
+                  <LocationFill fontSize={30} color='red' />
+                </Marker>
+              </>
+            )}
             <Marker longitude={trip.origin.lng} latitude={trip.origin.lat} offsetLeft={-15} offsetTop={-30}>
               <LocationFill fontSize={30} color='blue' />
-            </Marker>
-            <Marker longitude={trip.destination.lng} latitude={trip.destination.lat} offsetLeft={-15} offsetTop={-30}>
-              <LocationFill fontSize={30} color='red' />
             </Marker>
           </>
         )}
 
-        {trip && directionData && <DirectionRender directions={directionData} color='#f0f060' />}
+        {trip && directionData && tripStatus === TripStatus.ACCEPTED && (
+          <DirectionRender directions={directionData} color='#000000' />
+        )}
       </GoongMap>
 
       <div className='absolute top-10 right-5 bg-white px-3 py-1 rounded-lg shadow-lg'>
         <span className='mr-2'>Online</span>
         <Switch
           checked={isOnline}
-          onChange={(checked) => setIsOnline(checked)}
+          onChange={handleToggleOnline}
           style={{ '--height': '25px', '--width': '35px' }}
           disabled={!!trip}
         />
@@ -108,13 +208,14 @@ export default function RidesPage() {
               <div className='text-center'>
                 <div className='h-16 w-16 rounded-full'>
                   <img
-                    src='https://sm.ign.com/t/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.300.jpg'
+                    // src='https://sm.ign.com/t/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.300.jpg'
+                    src={getUserInfoQuery.data?.avatar}
                     alt=''
                     className='h-full w-full rounded-full object-cover'
                   />
                 </div>
-                <div className='font-bold'>Alex</div>
-                <div className=''>0389777546</div>
+                <div className='font-bold'>{getUserInfoQuery.data?.name}</div>
+                <div className=''>{getUserInfoQuery.data?.phone}</div>
               </div>
               <div className='flex-1'>
                 <div className='ml-6 flex flex-col gap-1 '>
@@ -149,46 +250,61 @@ export default function RidesPage() {
               {!tripStatus && (
                 <>
                   <Button color='danger' fill='outline' className='text-sm px-5' onClick={handleCancel}>
-                    Cancel
+                    Đóng
                   </Button>
                   <Button color='primary' className='text-sm px-5' onClick={handleAccept}>
-                    Accept
+                    Chấp nhận
                   </Button>
                 </>
               )}
 
-              {tripStatus == 'started' && (
+              {tripStatus == TripStatus.ACCEPTED && (
                 <Button
                   color='primary'
                   className='text-sm px-5'
                   onClick={() => {
-                    setTripStatus('arrivedPickupLocation')
+                    setTripStatus(TripStatus.ARRIVED_START)
+                    socket?.emit('arriveStart', trip)
                   }}
                   block
                 >
-                  Arrived pickup location
+                  Đã đến vị trí bắt đầu
                 </Button>
               )}
 
-              {tripStatus == 'arrivedPickupLocation' && (
+              {tripStatus == TripStatus.ARRIVED_START && (
                 <Button
                   color='primary'
                   className='text-sm px-5'
                   onClick={() => {
-                    setTripStatus('arrived')
+                    setTripStatus(TripStatus.RUNNING)
+                    socket?.emit('startTrip', trip)
+                  }}
+                  block
+                >
+                  Bắt đầu chuyến đi
+                </Button>
+              )}
 
+              {tripStatus == TripStatus.RUNNING && (
+                <Button
+                  color='primary'
+                  className='text-sm px-5'
+                  onClick={() => {
+                    setTripStatus(TripStatus.FINISHED)
+                    socket?.emit('finishTrip', trip)
                     resetDirection()
                     setTrip(undefined)
                     setTripStatus('')
 
                     Toast.show({
                       icon: 'success',
-                      content: 'Trip finished'
+                      content: 'Đã hoàn thành chuyến đi'
                     })
                   }}
                   block
                 >
-                  Arrived
+                  Đã đến vị trí kết thúc
                 </Button>
               )}
             </div>

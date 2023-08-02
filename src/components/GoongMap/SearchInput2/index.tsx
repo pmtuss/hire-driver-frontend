@@ -15,10 +15,11 @@ interface SearchInput2Props {
   onSelect?: (value: any) => void
   icon?: ReactNode
   placeholder?: string
+  disabled?: boolean
 }
 
 const SearchInput2: FC<SearchInput2Props> = (props) => {
-  const { value, onChange, onSelect, icon, placeholder } = props
+  const { value, onChange, onSelect, icon, placeholder, disabled } = props
 
   const [isFocus, setIsFocus] = useState<boolean>(false)
   const [visible, setVisible] = useState<boolean>(false)
@@ -125,6 +126,7 @@ const SearchInput2: FC<SearchInput2Props> = (props) => {
         {/* input  */}
         <div className='flex-1 pl-2 pr-1'>
           <Input
+            disabled={disabled}
             value={value}
             clearable
             style={{ '--font-size': 'var(--adm-font-size-5)' }}
@@ -158,7 +160,7 @@ const SearchInput2: FC<SearchInput2Props> = (props) => {
                       getCurrentPosition()
                     }}
                   >
-                    <div className='py-2'>Choose your location</div>
+                    <div className='py-2'>Chọn vị trí hiện tại</div>
                   </List.Item>
                   {myAdds.map((item, index) => {
                     return (

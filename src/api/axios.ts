@@ -5,7 +5,7 @@ import config from '~/configs/config'
 // Base config
 
 const baseConfig: AxiosRequestConfig = {
-  baseURL: config.serverUrl,
+  baseURL: config.serverUrl + 'api/',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'

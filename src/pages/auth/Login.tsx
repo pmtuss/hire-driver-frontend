@@ -3,15 +3,14 @@ import { Form, Input, Button, Toast } from 'antd-mobile'
 import { useCallback, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { login } from '~/api/auth'
-import { isAxiosError } from '~/utils/util'
 
 const validateMessages = {
-  required: '${label} is required!',
+  required: '${label} chưa được điền!',
   types: {
-    email: '${label} is not a email!'
+    email: 'Không đúng định dạng email!'
   },
   string: {
-    min: '${label} is at least ${min} characters!'
+    min: '${label} phải tối thiểu ${min} kí tự!'
   }
 }
 
@@ -19,13 +18,13 @@ const FormFooter = ({ isLoading }: { isLoading?: boolean }) => {
   return (
     <div className=''>
       <div className='text-center py-2'>
-        Don't have an account?
+        Bạn chưa có tài khoản?
         <Link to='/register' className='ml-1'>
-          Sign up
+          Đăng ký
         </Link>
       </div>
       <Button loading={isLoading} className='h-10' type='submit' color='primary' fill='solid' block>
-        Login
+        Đăng nhập
       </Button>
     </div>
   )
@@ -74,7 +73,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <h1 className='text-center'>Welcome back</h1>
+      <h1 className='text-center'>Đăng nhập</h1>
       {errorForm && <div className='text-center text-red-500'>{errorForm}</div>}
 
       <Form
@@ -90,7 +89,7 @@ export default function LoginPage() {
           <Input placeholder='example@gmail.com' clearable />
         </Form.Item>
         <Form.Header />
-        <Form.Item name='password' label='Password' rules={[{ required: true, min: 6 }]}>
+        <Form.Item name='password' label='Mật khẩu' rules={[{ required: true, min: 6 }]}>
           <Input placeholder='password' clearable type='password' />
         </Form.Item>
       </Form>

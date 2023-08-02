@@ -1,10 +1,16 @@
-import { Card, Ellipsis } from 'antd-mobile'
+import { useQuery } from '@tanstack/react-query'
+import { Card, Ellipsis, Empty, Skeleton } from 'antd-mobile'
 import { LocationFill, StarOutline } from 'antd-mobile-icons'
 import classNames from 'classnames'
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getTrips } from '~/api/trip'
+import { ITrip } from '~/types/dto/trip.dto'
+import { formatMoney } from '~/utils/util'
+import dayjs from 'dayjs'
 
 export default function DriverHomePage() {
   const [activeTab, setActiveTab] = useState(1)
+  const [trips, setTrips] = useState<ITrip[]>()
 
   const tabs = [
     {
@@ -24,6 +30,35 @@ export default function DriverHomePage() {
       title: 'All time'
     }
   ]
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['trips', activeTab],
+    queryFn: getTrips
+  })
+
+  useEffect(() => {
+    if (data) {
+      const t = data
+        .filter((item) => {
+          switch (activeTab) {
+            case 1:
+              return dayjs().isSame(item.createdAt, 'date')
+            case 2:
+              return dayjs().isSame(item.createdAt, 'week')
+            case 3:
+              return dayjs().isSame(item.createdAt, 'month')
+            default:
+              return true
+          }
+        })
+        .sort((a, b) => {
+          return b.createdAt.getTime() - a.createdAt.getTime()
+        })
+
+      setTrips(t)
+    }
+  }, [data, activeTab])
+
   return (
     <div className='flex flex-col h-screen'>
       <div className=' px-5 pt-24 pb-5 shadow-md'>
@@ -45,152 +80,60 @@ export default function DriverHomePage() {
       </div>
       <div className='flex-1 overflow-auto pt-1 pb-5 border-t border-slate-200'>
         <div className='h-full overflow-auto px-5 flex flex-col gap-2'>
-          <Card className='border border-solid border-slate-200 shadow-md'>
-            <div className='font-semibold'>
-              <span className=''>20/01/2021</span>
-              <span className='mx-1'>|</span>
-              <span className=''>07:40</span>
-            </div>
-            <div className='flex items-center py-2'>
-              <StarOutline color='blue' />
-              <div className='ml-1'>
-                <Ellipsis direction='end' content={'1 Ngõ 88 Kim Hoa, Phương Liên, Đống Đa, Hà Nội'} />
-              </div>
-            </div>
-            <div className='flex items-center'>
-              <LocationFill color='red' />
-              <div className='ml-1'>
-                <Ellipsis
-                  direction='end'
-                  content={
-                    'Nhà D9 - Đại học Bách khoa Hà Nội, Đại học Bách khoa Hà Nội, Bách Khoa, Hai Bà Trưng, Hà Nội'
-                  }
-                />
-              </div>
-            </div>
-          </Card>
+          {isLoading && (
+            <>
+              <Card className='border border-solid border-slate-200 shadow-md'>
+                <Skeleton.Paragraph animated lineCount={3} />
+              </Card>
+              <Card className='border border-solid border-slate-200 shadow-md'>
+                <Skeleton.Paragraph animated lineCount={3} />
+              </Card>
+            </>
+          )}
 
-          <Card className='border border-solid border-slate-200 shadow-md'>
-            <div className='font-semibold'>
-              <span className=''>20/01/2021</span>
-              <span className='mx-1'>|</span>
-              <span className=''>07:40</span>
-            </div>
-            <div className='flex items-center py-2'>
-              <StarOutline color='blue' />
-              <div className='ml-1'>
-                <Ellipsis direction='end' content={'1 Ngõ 88 Kim Hoa, Phương Liên, Đống Đa, Hà Nội'} />
-              </div>
-            </div>
-            <div className='flex items-center'>
-              <LocationFill color='red' />
-              <div className='ml-1'>
-                <Ellipsis
-                  direction='end'
-                  content={
-                    'Nhà D9 - Đại học Bách khoa Hà Nội, Đại học Bách khoa Hà Nội, Bách Khoa, Hai Bà Trưng, Hà Nội'
-                  }
-                />
-              </div>
-            </div>
-          </Card>
+          {trips && trips.length === 0 && (
+            <Card className='border border-solid border-slate-200 shadow-md'>
+              <Empty description={'Không có chuyến đi nào'} />
+            </Card>
+          )}
 
-          <Card className='border border-solid border-slate-200 shadow-md'>
-            <div className='font-semibold'>
-              <span className=''>20/01/2021</span>
-              <span className='mx-1'>|</span>
-              <span className=''>07:40</span>
-            </div>
-            <div className='flex items-center py-2'>
-              <StarOutline color='blue' />
-              <div className='ml-1'>
-                <Ellipsis direction='end' content={'1 Ngõ 88 Kim Hoa, Phương Liên, Đống Đa, Hà Nội'} />
-              </div>
-            </div>
-            <div className='flex items-center'>
-              <LocationFill color='red' />
-              <div className='ml-1'>
-                <Ellipsis
-                  direction='end'
-                  content={
-                    'Nhà D9 - Đại học Bách khoa Hà Nội, Đại học Bách khoa Hà Nội, Bách Khoa, Hai Bà Trưng, Hà Nội'
-                  }
-                />
-              </div>
-            </div>
-          </Card>
-          <Card className='border border-solid border-slate-200 shadow-md'>
-            <div className='font-semibold'>
-              <span className=''>20/01/2021</span>
-              <span className='mx-1'>|</span>
-              <span className=''>07:40</span>
-            </div>
-            <div className='flex items-center py-2'>
-              <StarOutline color='blue' />
-              <div className='ml-1'>
-                <Ellipsis direction='end' content={'1 Ngõ 88 Kim Hoa, Phương Liên, Đống Đa, Hà Nội'} />
-              </div>
-            </div>
-            <div className='flex items-center'>
-              <LocationFill color='red' />
-              <div className='ml-1'>
-                <Ellipsis
-                  direction='end'
-                  content={
-                    'Nhà D9 - Đại học Bách khoa Hà Nội, Đại học Bách khoa Hà Nội, Bách Khoa, Hai Bà Trưng, Hà Nội'
-                  }
-                />
-              </div>
-            </div>
-          </Card>
-          <Card className='border border-solid border-slate-200 shadow-md'>
-            <div className='font-semibold'>
-              <span className=''>20/01/2021</span>
-              <span className='mx-1'>|</span>
-              <span className=''>07:40</span>
-            </div>
-            <div className='flex items-center py-2'>
-              <StarOutline color='blue' />
-              <div className='ml-1'>
-                <Ellipsis direction='end' content={'1 Ngõ 88 Kim Hoa, Phương Liên, Đống Đa, Hà Nội'} />
-              </div>
-            </div>
-            <div className='flex items-center'>
-              <LocationFill color='red' />
-              <div className='ml-1'>
-                <Ellipsis
-                  direction='end'
-                  content={
-                    'Nhà D9 - Đại học Bách khoa Hà Nội, Đại học Bách khoa Hà Nội, Bách Khoa, Hai Bà Trưng, Hà Nội'
-                  }
-                />
-              </div>
-            </div>
-          </Card>
-          <Card className='border border-solid border-slate-200 shadow-md'>
-            <div className='font-semibold'>
-              <span className=''>20/01/2021</span>
-              <span className='mx-1'>|</span>
-              <span className=''>07:40</span>
-            </div>
-            <div className='flex items-center py-2'>
-              <StarOutline color='blue' />
-              <div className='ml-1'>
-                <Ellipsis direction='end' content={'1 Ngõ 88 Kim Hoa, Phương Liên, Đống Đa, Hà Nội'} />
-              </div>
-            </div>
-            <div className='flex items-center'>
-              <LocationFill color='red' />
-              <div className='ml-1'>
-                <Ellipsis
-                  direction='end'
-                  content={
-                    'Nhà D9 - Đại học Bách khoa Hà Nội, Đại học Bách khoa Hà Nội, Bách Khoa, Hai Bà Trưng, Hà Nội'
-                  }
-                />
-              </div>
-            </div>
-          </Card>
+          {trips &&
+            trips.length > 0 &&
+            trips.map((trip) => (
+              <Card className='border border-solid border-slate-200 shadow-md'>
+                <div className='font-semibold flex justify-between'>
+                  <div className=''>
+                    <span className=''>
+                      {trip.createdAt.toLocaleDateString('vi-VN', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                      })}
+                    </span>
+                    <span className='mx-1'>|</span>
+                    <span className=''>
+                      {trip.createdAt.toLocaleTimeString('vi-VN', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
+                  </div>
+                  <div className=''>{formatMoney(trip.cost)}</div>
+                </div>
+                <div className='flex items-center py-2'>
+                  <StarOutline color='blue' />
+                  <div className='ml-1'>
+                    <Ellipsis direction='end' content={trip.originText} />
+                  </div>
+                </div>
+                <div className='flex items-center'>
+                  <LocationFill color='red' />
+                  <div className='ml-1'>
+                    <Ellipsis direction='end' content={trip.destinationText} />
+                  </div>
+                </div>
+              </Card>
+            ))}
         </div>
       </div>
     </div>

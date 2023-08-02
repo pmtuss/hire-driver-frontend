@@ -1,4 +1,4 @@
-import { CreateTripRequestDto, ITrip } from '~/types/dto/trip.dto'
+import { CreateTripRequestDto, ITrip, UpdateTripRequestDto } from '~/types/dto/trip.dto'
 import { del, get, post, put } from './axios'
 
 export const getTrips = async () => {
@@ -16,7 +16,15 @@ export const getTrip = (id: string) => {
   return get<ITrip>(`trips/${id}`)
 }
 
-export const updateTrip = (id: string, body: CreateTripRequestDto) => {
+export const getAcceptableTrips = () => {
+  return get<ITrip[]>(`trips/acceptable`)
+}
+
+// export const updateTrip = (id: string, body: UpdateTripRequestDto) => {
+//   return put(`trips/${id}`, body)
+// }
+
+export const updateTrip = ({ id, body }: { id: string; body: UpdateTripRequestDto }) => {
   return put(`trips/${id}`, body)
 }
 
@@ -26,4 +34,12 @@ export const createTrip = (body: CreateTripRequestDto) => {
 
 export const deleteTrip = (id: string) => {
   return del(`trips/${id}`)
+}
+
+export const acceptTrip = (id: string) => {
+  return get(`trips/${id}/acceptTrip`)
+}
+
+export const getCurrentTrip = () => {
+  return get<ITrip>(`trips/currentTrip`)
 }

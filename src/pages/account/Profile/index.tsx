@@ -4,14 +4,15 @@ import { RefObject, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getProfile, updateProfile } from '~/api/user'
 import DefaultPicture from '~/assets/default.png'
+import MAvatar from '~/components/Avatar'
 
 const validateMessages = {
-  required: '${label} is required!',
+  required: '${label} chưa được điền!',
   types: {
-    email: '${label} is not a email!'
+    email: 'Không đúng định dạng email!'
   },
   string: {
-    min: '${label} is at least ${min} characters!'
+    min: '${label} phải tối thiểu ${min} kí tự!'
   }
 }
 
@@ -31,7 +32,7 @@ export default function ProfilePage() {
       console.log({ data })
       Toast.show({
         icon: 'success',
-        content: data.message,
+        content: 'Cập nhật thành công',
         duration: 1000
       })
     }
@@ -60,17 +61,22 @@ export default function ProfilePage() {
       const fields = {
         name: data.name,
         phone: data.phone,
-        email: data.email,
-        dob: data.dob ? new Date(data.dob) : new Date()
+        email: data.email
       }
       form.setFieldsValue(fields)
+      if (data.dob) {
+        form.setFieldsValue({
+          dob: new Date(data.dob)
+        })
+      }
     }
   }, [getProfileQuery.isLoading, getProfileQuery.data])
 
   return (
     <>
       <div className='flex justify-center py-8'>
-        <img src={DefaultPicture} alt='' className='h-14 w-14 rounded-full object-cover' />
+        {/* <img src={DefaultPicture} alt='' className='h-14 w-14 rounded-full object-cover' /> */}
+        <MAvatar src={getProfileQuery.data?.avatar || DefaultPicture} />
       </div>
 
       <Form
@@ -82,11 +88,11 @@ export default function ProfilePage() {
         requiredMarkStyle={'none'}
         footer={
           <Button className='mt-2' block type='submit' color='primary'>
-            Update
+            Cập nhật
           </Button>
         }
       >
-        <Form.Item name='name' label='Name' rules={[{ required: true }]}>
+        <Form.Item name='name' label='Tên' rules={[{ required: true }]}>
           <Input placeholder='Name' />
         </Form.Item>
         <Form.Item name='email' label='Email' disabled>
@@ -94,13 +100,13 @@ export default function ProfilePage() {
         </Form.Item>
         <Form.Item
           name='dob'
-          label='Date of birth'
+          label='Ngày sinh'
           trigger='onConfirm'
           onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {
             datePickerRef.current?.open()
           }}
         >
-          <DatePicker confirmText='OK' cancelText='Cancel' max={new Date()} min={new Date('1930/01/01')}>
+          <DatePicker confirmText='OK' cancelText='Đóng' max={new Date()} min={new Date('1930/01/01')}>
             {(value) =>
               value
                 ? value.toLocaleDateString('vi-VN', {
@@ -115,12 +121,12 @@ export default function ProfilePage() {
 
         <Form.Item
           name='phone'
-          label='Phone number'
+          label='Số điện thoại'
           rules={[
             { required: true },
             {
               pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
-              message: 'Invalid phone number'
+              message: 'Số điện thoại không hợp lệ'
             }
           ]}
           disabled

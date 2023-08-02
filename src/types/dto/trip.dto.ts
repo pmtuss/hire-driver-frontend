@@ -6,7 +6,7 @@ export interface ITrip {
   createdAt: Date
   updatedAt: Date
 
-  user?: string
+  passenger?: string
   driver?: string
 
   endAt?: Date
@@ -17,7 +17,12 @@ export interface ITrip {
   destination: ICoordinate
   destinationText: string
 
-  carId: string
+  car: {
+    model: string
+    color: string
+    plate: string
+  }
+
   route: string
 
   cost: number
@@ -26,4 +31,6 @@ export interface ITrip {
 }
 
 export interface CreateTripRequestDto
-  extends Pick<ITrip, 'origin' | 'originText' | 'destination' | 'destinationText' | 'route' | 'cost' | 'carId'> {}
+  extends Pick<ITrip, 'origin' | 'originText' | 'destination' | 'destinationText' | 'route' | 'cost' | 'car'> {}
+
+export interface UpdateTripRequestDto extends Partial<ITrip> {}

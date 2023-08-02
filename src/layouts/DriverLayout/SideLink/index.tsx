@@ -14,24 +14,24 @@ export default function SideLink() {
     {
       path: '/',
       icon: <AppOutline fontSize={25} />,
-      title: 'Home'
+      title: 'Trang chủ'
     },
     {
       path: '/rides',
       icon: <TruckOutline fontSize={25} />,
-      title: 'Rides'
+      title: 'Chuyến đi'
     },
 
     {
       path: '/profile',
       icon: <UserOutline fontSize={25} />,
-      title: 'Profile'
+      title: 'Thông tin cá nhân'
     },
 
     {
       path: '/logout',
       icon: <CloseCircleOutline fontSize={25} />,
-      title: 'Logout'
+      title: 'Đăng xuất'
     }
   ]
 

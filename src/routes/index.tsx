@@ -43,72 +43,72 @@ export const privateRoutes = [
   {
     path: '/',
     name: 'Home',
-    element: HomePage,
+    element: BookingPage,
     layout: MainLayout
   },
   {
     path: '/booking',
-    name: 'Booking',
+    name: 'Đặt chuyến đi',
     element: BookingPage,
     layout: MainLayout
   },
   {
     path: '/history',
-    name: 'History',
+    name: 'Lịch sử',
     element: HistoryPage,
     layout: MainLayout
   },
   {
     path: '/account',
-    name: 'Account',
+    name: 'Tài khoản',
     element: AccountPage,
     layout: MainLayout
   },
   {
     path: '/profile',
-    name: 'Profile',
+    name: 'Thông tin cá nhân',
     element: ProfilePage,
     layout: BackLayout
   },
   {
     path: '/vehicles',
-    name: 'Vehicles',
+    name: 'Phương tiện',
     element: VehiclePage,
     layout: BackLayout
   },
   {
     path: '/vehicles/new',
-    name: 'Add new vehicle',
+    name: 'Thêm phương tiện',
     element: NewVehiclePage,
     layout: BackLayout
   },
   {
     path: '/vehicles/:id',
-    name: 'Update vehicles',
+    name: 'Cập nhật phương tiện',
     element: NewVehiclePage,
     layout: BackLayout
   },
   {
     path: '/addresses',
-    name: 'Your Addresses',
+    name: 'Địa chỉ của bạn',
     element: AddressPage,
     layout: BackLayout
   },
   {
     path: '/addresses/new',
-    name: 'Add new address',
+    name: 'Thêm địa chỉ',
     element: AddressNewPage,
     layout: BackLayout
   },
   {
     path: '/addresses/:id',
-    name: 'Update address',
+    name: 'Cập nhật địa chỉ',
     element: AddressNewPage,
     layout: BackLayout
   },
   {
     path: '/logout',
-    name: 'Logout',
+    name: 'Đăng xuất',
     element: LogoutPage
   },
   {

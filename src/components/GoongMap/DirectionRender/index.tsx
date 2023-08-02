@@ -64,7 +64,7 @@ const DirectionRender: React.FC<DirectionRenderProps> = (props) => {
 
     // get camara info for bounds fit
     const newCameraTransform = map.cameraForBounds(bounds, {
-      padding: { top: 150, bottom: 200, left: 30, right: 30 }
+      padding: { top: 200, bottom: 200, left: 30, right: 30 }
     })
 
     // change viewport fit bounds
