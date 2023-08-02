@@ -91,13 +91,14 @@ export default function DriverHomePage() {
             </>
           )}
 
-          {trips && trips.length === 0 && (
+          {!isLoading && trips && trips.length === 0 && (
             <Card className='border border-solid border-slate-200 shadow-md'>
               <Empty description={'Không có chuyến đi nào'} />
             </Card>
           )}
 
-          {trips &&
+          {!isLoading &&
+            trips &&
             trips.length > 0 &&
             trips.map((trip) => (
               <Card className='border border-solid border-slate-200 shadow-md'>
