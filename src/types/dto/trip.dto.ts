@@ -30,7 +30,9 @@ export interface ITrip {
   status?: TripStatus
 }
 
-export interface CreateTripRequestDto
-  extends Pick<ITrip, 'origin' | 'originText' | 'destination' | 'destinationText' | 'route' | 'cost' | 'car'> {}
+export type CreateTripRequestDto = Pick<
+  ITrip,
+  'origin' | 'originText' | 'destination' | 'destinationText' | 'route' | 'cost' | 'car'
+>
 
-export interface UpdateTripRequestDto extends Partial<ITrip> {}
+export type UpdateTripRequestDto = Partial<ITrip>

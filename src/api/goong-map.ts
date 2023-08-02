@@ -44,7 +44,7 @@ export const getAutoComplete = async (request: AutoCompleteRequestDto) => {
     params: { input, limit }
   })
 
-  const returnValue = data.predictions.map((add, index) => {
+  const returnValue = data.predictions.map((add) => {
     return {
       compound: add.compound,
       formatted_address: add.description,

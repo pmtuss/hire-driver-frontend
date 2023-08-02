@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { Form, Input, Button, Toast, Switch, Radio } from 'antd-mobile'
-import { useCallback, useMemo, useState } from 'react'
+import { Form, Input, Button, Toast, Radio } from 'antd-mobile'
+import { useCallback, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { register } from '~/api/auth'
 import { UserRoles } from '~/constants/enum'
-import { isAxiosError } from '~/utils/util'
 
 const validateMessages = {
   required: '${label} chưa được điền!',
@@ -42,7 +41,7 @@ export default function RegisterPage() {
     reset
   } = useMutation({
     mutationFn: register,
-    onSuccess: (data) => {
+    onSuccess: () => {
       navigate('/login')
       Toast.show({
         icon: 'success',
@@ -50,7 +49,9 @@ export default function RegisterPage() {
         duration: 2000
       })
     },
-    onError: (error: any) => {}
+    onError: (error: any) => {
+      console.log(error)
+    }
   })
 
   const handleSubmit = useCallback(

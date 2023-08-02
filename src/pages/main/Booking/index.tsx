@@ -44,8 +44,8 @@ export default function BookingPage() {
     directionsData,
     setDirectionsData,
 
-    driver,
-    setDriver,
+    // driver,
+    // setDriver,
 
     trip,
     setTrip
@@ -240,7 +240,7 @@ export default function BookingPage() {
     if (!myCars) return [['']]
 
     return [
-      myCars.map((car, index) => {
+      myCars.map((car) => {
         return {
           label: (
             <div className={`flex items-center text-sm gap-2`}>
@@ -274,9 +274,9 @@ export default function BookingPage() {
         model: currentCar?.model!
       },
       origin: origin!,
-      originText: originText!,
+      originText: originText,
       destination: destination!,
-      destinationText: destinationText!,
+      destinationText: destinationText,
       distance,
       duration,
       cost,
@@ -316,7 +316,7 @@ export default function BookingPage() {
 
   const { mutate: updateTripMutate } = useMutation({
     mutationFn: (variable: any) => updateTrip(variable),
-    onSuccess: (body, variables) => {
+    onSuccess: (_, variables) => {
       if (variables.body.status === TripStatus.CANCELED) {
         Toast.show({
           icon: 'success',
@@ -458,7 +458,7 @@ export default function BookingPage() {
                   name='car'
                   label='Phương tiện'
                   rules={[{ required: true }]}
-                  onClick={(e, pickerRef: RefObject<PickerRef>) => {
+                  onClick={(_, pickerRef: RefObject<PickerRef>) => {
                     if (columns[0].length == 0) {
                       navigate('/vehicles/new')
                     } else {

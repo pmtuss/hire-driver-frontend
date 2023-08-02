@@ -55,7 +55,7 @@ export default function NewVehiclePage() {
 
   const { mutate: mutateUpdateVehicle } = useMutation({
     mutationFn: (body) => updateVehicle(id as string, body as any),
-    onSuccess: (data: any) => {
+    onSuccess: () => {
       Toast.show({
         icon: 'success',
         duration: 1000,
@@ -172,7 +172,7 @@ export default function NewVehiclePage() {
         name='color'
         label='Màu sắc'
         rules={[{ required: true }]}
-        onClick={(e, pickerRef: RefObject<PickerRef>) => {
+        onClick={(_, pickerRef: RefObject<PickerRef>) => {
           pickerRef.current?.open()
         }}
       >

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Button, List, Tag, Toast } from 'antd-mobile'
+import { List, Tag, Toast } from 'antd-mobile'
 import { AddCircleOutline, EnvironmentOutline } from 'antd-mobile-icons'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -28,7 +28,7 @@ export default function AddressPage() {
     <>
       <List className='w-full mt-2'>
         {!isLoading &&
-          items?.map((item, index) => {
+          items?.map((item) => {
             return (
               <List.Item
                 key={item._id}

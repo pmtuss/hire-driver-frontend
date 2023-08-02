@@ -12,5 +12,4 @@ export interface IAddress {
   updatedAt?: string
 }
 
-export interface CreateAddressRequestDto
-  extends Pick<IAddress, 'formatted_address' | 'isDefault' | 'location' | 'name'> {}
+export type CreateAddressRequestDto = Pick<IAddress, 'formatted_address' | 'isDefault' | 'location' | 'name'>

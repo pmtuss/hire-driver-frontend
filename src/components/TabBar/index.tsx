@@ -1,5 +1,5 @@
 import { TabBar, TabBarProps } from 'antd-mobile'
-import { AppOutline, HistogramOutline, TravelOutline, UnorderedListOutline, UserOutline } from 'antd-mobile-icons'
+import { HistogramOutline, TravelOutline, UserOutline } from 'antd-mobile-icons'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function MTabBar(props: TabBarProps) {

@@ -1,6 +1,6 @@
-import { FloatingBubble, List, Popup } from 'antd-mobile'
+import { FloatingBubble } from 'antd-mobile'
 import { AppstoreOutline } from 'antd-mobile-icons'
-import React, { useState, PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 
 import './index.css'
 import SideBar from './SideBar'

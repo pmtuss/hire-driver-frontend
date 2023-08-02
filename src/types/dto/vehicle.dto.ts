@@ -8,4 +8,4 @@ export interface IVehicle {
   updatedAt: string
 }
 
-export interface CreateVehicleRequest extends Pick<IVehicle, 'color' | 'model' | 'plate' | 'isDefault'> {}
+export type CreateVehicleRequest = Pick<IVehicle, 'color' | 'model' | 'plate' | 'isDefault'>

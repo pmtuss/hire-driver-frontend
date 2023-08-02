@@ -49,6 +49,7 @@ export default function LoginPage() {
       }, 100)
     },
     onError: (error: any) => {
+      console.log(error)
       Toast.clear()
     }
   })

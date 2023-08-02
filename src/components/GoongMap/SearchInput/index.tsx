@@ -1,7 +1,7 @@
 import { Input, InputProps } from 'antd-mobile'
 import { FC } from 'react'
 
-interface SearchInputProps extends InputProps {}
+type SearchInputProps = InputProps
 
 const SearchInput: FC<SearchInputProps> = (props) => {
   const { style = { '--font-size': 'var(--adm-font-size-5)' }, ...rest } = props

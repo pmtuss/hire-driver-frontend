@@ -60,7 +60,7 @@ export default function RidesPage() {
 
   const acceptTripMutation = useMutation({
     mutationFn: () => acceptTrip(trip._id),
-    onSuccess: (data) => {
+    onSuccess: () => {
       setTripStatus(TripStatus.ACCEPTED)
     },
     onError: (error: any) => {

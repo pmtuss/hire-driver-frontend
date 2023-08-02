@@ -51,12 +51,12 @@ const GoongMap: FC<GoongMapProps> = (props) => {
         style={{ right: 10, bottom: 150, ...geolocateStyle }}
         // className='w-10 h-10'
         positionOptions={{ enableHighAccuracy: true }}
-        onGeolocate={(location: any) => {
-          // console.log("location: ", location);
-        }}
-        onViewStateChange={(viewport: any) => {
-          // console.log(viewport);
-        }}
+        // onGeolocate={(location: any) => {
+        //   // console.log("location: ", location);
+        // }}
+        // onViewStateChange={(viewport: any) => {
+        //   // console.log(viewport);
+        // }}
         className='h-10 w-10 rounded-full'
       />
       {children}

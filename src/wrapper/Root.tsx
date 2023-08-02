@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
-import { driverPrivateRoutes, privateRoutes, publicRoutes } from '~/routes'
+import { publicRoutes } from '~/routes'
 
 import '@goongmaps/goong-js/dist/goong-js.css'
-import { getUserRole, isExpiredToken } from '~/utils/jwt'
+import { isExpiredToken } from '~/utils/jwt'
 import { useEffect, useMemo } from 'react'
 
 import App from '~/App'
@@ -18,9 +18,9 @@ export default function Root() {
     return localStorage.getItem('token')
   }, [navigate])
 
-  const userRole = useMemo(() => {
-    if (accessToken) return getUserRole(accessToken)
-  }, [accessToken])
+  // const userRole = useMemo(() => {
+  //   if (accessToken) return getUserRole(accessToken)
+  // }, [accessToken])
 
   useEffect(() => {
     if (!accessToken || !isValidAccessToken(accessToken)) navigate('/login')

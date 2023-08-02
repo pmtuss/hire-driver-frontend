@@ -52,7 +52,7 @@ const DirectionRenderWithRoute: React.FC<IProps> = (props) => {
   )
 
   useEffect(() => {
-    let bounds = getBoundingOfRoute(coordinates)
+    const bounds = getBoundingOfRoute(coordinates)
 
     const { map, viewport, onViewportChange } = context
 

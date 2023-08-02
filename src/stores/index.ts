@@ -7,5 +7,5 @@ interface StoreState {
 
 export const userStore = create<StoreState>((set) => ({
   isLoggedIn: !!localStorage.getItem('token'),
-  setIsLoggedIn: (value: boolean) => set((state) => ({ isLoggedIn: value }))
+  setIsLoggedIn: (value: boolean) => set(() => ({ isLoggedIn: value }))
 }))

@@ -1,6 +1,5 @@
 import { AppOutline, CloseCircleOutline, TruckOutline, UserOutline } from 'antd-mobile-icons'
 import classNames from 'classnames'
-import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDriverStore } from '~/stores/driver.store'
 

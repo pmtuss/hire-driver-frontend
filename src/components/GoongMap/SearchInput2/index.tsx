@@ -6,7 +6,6 @@ import './index.css'
 import { debounce } from 'lodash'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { getAddressByCoordinate, getAutoComplete, getPlaceDetail } from '~/api/goong-map'
-import { AddressPrediction } from '~/types/dto/goong-map.dto'
 import { getAddresses } from '~/api/address'
 
 interface SearchInput2Props {
@@ -162,7 +161,7 @@ const SearchInput2: FC<SearchInput2Props> = (props) => {
                   >
                     <div className='py-2'>Chọn vị trí hiện tại</div>
                   </List.Item>
-                  {myAdds.map((item, index) => {
+                  {myAdds.map((item) => {
                     return (
                       <List.Item
                         key={item._id}

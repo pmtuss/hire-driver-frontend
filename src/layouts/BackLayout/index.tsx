@@ -1,4 +1,3 @@
-import ScreenContainer from '~/components/ScreenContainer'
 import Header from './Header'
 import { PropsWithChildren } from 'react'
 

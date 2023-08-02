@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Card, Empty, List, Skeleton } from 'antd-mobile'
+import { Card, Empty, Skeleton } from 'antd-mobile'
 import { getTrips } from '~/api/trip'
 
 import TripItem from '~/components/TripItem'
@@ -16,7 +16,7 @@ export default function HistoryPage() {
         {myTrips &&
           myTrips
             .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-            .map((item, index) => {
+            .map((item) => {
               return <TripItem key={item._id} item={item} />
             })}
 

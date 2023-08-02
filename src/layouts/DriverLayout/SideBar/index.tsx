@@ -5,11 +5,11 @@ import SideLink from '../SideLink'
 import { useQuery } from '@tanstack/react-query'
 import { getProfile } from '~/api/user'
 
-interface IProps extends PopupProps {}
+type IProps = PopupProps
 export default function SideBar(props: IProps) {
   const { position = 'left', ...rest } = props
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile } = useQuery({
     queryKey: ['users', 'profile'],
     queryFn: getProfile
   })

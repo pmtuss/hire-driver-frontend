@@ -1,4 +1,3 @@
-import { CreateVehicleRequest, IVehicle } from '~/types/dto/vehicle.dto'
 import { del, get, post, put } from './axios'
 import { CreateAddressRequestDto, IAddress } from '~/types/dto/address.dto'
 

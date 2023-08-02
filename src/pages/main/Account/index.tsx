@@ -1,5 +1,5 @@
 import { List, Space } from 'antd-mobile'
-import { ContentOutline, StarFill, TruckOutline, EnvironmentOutline, CloseCircleOutline } from 'antd-mobile-icons'
+import { ContentOutline, TruckOutline, EnvironmentOutline, CloseCircleOutline } from 'antd-mobile-icons'
 import { useNavigate } from 'react-router-dom'
 import DefaultPicture from '~/assets/default.png'
 
@@ -33,7 +33,7 @@ const items = [
 export default function AccountPage() {
   const navigate = useNavigate()
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['users', 'profile'],
     queryFn: getProfile
   })

@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, DatePicker, DatePickerRef, Form, Input, Selector, Slider, Stepper, Toast } from 'antd-mobile'
+import { Button, DatePicker, DatePickerRef, Form, Input, Toast } from 'antd-mobile'
 import { RefObject, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { getProfile, updateProfile } from '~/api/user'
 import DefaultPicture from '~/assets/default.png'
 import MAvatar from '~/components/Avatar'
@@ -17,7 +16,7 @@ const validateMessages = {
 }
 
 export default function ProfilePage() {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const [form] = Form.useForm()
 
@@ -102,7 +101,7 @@ export default function ProfilePage() {
           name='dob'
           label='Ngày sinh'
           trigger='onConfirm'
-          onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {
+          onClick={(_, datePickerRef: RefObject<DatePickerRef>) => {
             datePickerRef.current?.open()
           }}
         >

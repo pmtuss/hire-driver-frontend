@@ -1,9 +1,9 @@
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css'
-import { driverPrivateRoutes, privateRoutes, publicRoutes } from './routes'
+import { driverPrivateRoutes, privateRoutes } from './routes'
 
 import '@goongmaps/goong-js/dist/goong-js.css'
-import { getUserRole, isExpiredToken } from './utils/jwt'
+import { getUserRole } from './utils/jwt'
 import { useEffect, useMemo } from 'react'
 import { UserRoles } from './constants/enum'
 
@@ -13,7 +13,7 @@ import { useSocket } from './stores/socket.store'
 function App() {
   const navigate = useNavigate()
 
-  const { socket, setSocket } = useSocket()
+  const { setSocket } = useSocket()
 
   const accessToken = useMemo(() => {
     return localStorage.getItem('token')

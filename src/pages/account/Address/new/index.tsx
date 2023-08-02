@@ -1,9 +1,9 @@
 import { HTMLOverlay, MapContext, Marker } from '@goongmaps/goong-map-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, ButtonProps, Dialog, Input, InputRef, Loading, Mask, Switch, Toast } from 'antd-mobile'
+import { Button, ButtonProps, Dialog, Input, Loading, Mask, Switch, Toast } from 'antd-mobile'
 import { LocationFill } from 'antd-mobile-icons'
 import { debounce } from 'lodash'
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createAddress, deleteAddress, getAddress, updateAddress } from '~/api/address'
 import { getAddressByCoordinate, getPlaceDetail } from '~/api/goong-map'
@@ -282,7 +282,7 @@ export default function AddressNewPage() {
                   content: 'Xoá địa chỉ này?',
                   confirmText: <span className='text-danger'>Xoá</span>,
                   cancelText: 'Đóng',
-                  onConfirm: () => mutateDeleteAddress(id as string)
+                  onConfirm: () => mutateDeleteAddress(id)
                 })
               }
             }}

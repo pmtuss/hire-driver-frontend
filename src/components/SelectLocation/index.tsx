@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, Input, List, Loading, Popup, PopupProps } from 'antd-mobile'
+import { Input, List, Loading, Popup, PopupProps } from 'antd-mobile'
 import { SearchOutline } from 'antd-mobile-icons'
 import { debounce } from 'lodash'
 import { useMemo, useState } from 'react'
@@ -14,7 +14,6 @@ export default function SelectLocation(props: IProps) {
   const { showCloseButton = true, onClose, ...rest } = props
 
   const [input, setInput] = useState<string>('')
-  const [mapShow, setMapShow] = useState(false)
 
   const { data: myAdds } = useQuery({
     queryKey: ['addresses'],
@@ -28,7 +27,7 @@ export default function SelectLocation(props: IProps) {
     reset
   } = useMutation({
     mutationFn: getAutoComplete,
-    onSuccess: (data) => {
+    onSuccess: () => {
       // console.log(data)
     }
   })
@@ -56,7 +55,7 @@ export default function SelectLocation(props: IProps) {
     onClose?.()
   }
 
-  const handleSelect = (item: any) => {}
+  // const handleSelect = (item: any) => {}
 
   return (
     <div className=''>
@@ -100,7 +99,7 @@ export default function SelectLocation(props: IProps) {
               {!isSearching &&
                 !searchAdds &&
                 myAdds &&
-                myAdds.map((item, index) => {
+                myAdds.map((item) => {
                   return (
                     <List.Item key={item._id}>
                       <div className='text-sm py-2'>
