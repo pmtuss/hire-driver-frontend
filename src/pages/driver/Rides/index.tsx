@@ -1,5 +1,5 @@
 import { Button, Ellipsis, FloatingPanel, Switch, Toast } from 'antd-mobile'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import GoongMap from '~/components/GoongMap/GoongMap'
 import { ExclamationShieldFill, LocationFill, StarOutline } from 'antd-mobile-icons'
 
