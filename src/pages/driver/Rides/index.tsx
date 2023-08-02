@@ -1,5 +1,5 @@
 import { Button, Ellipsis, FloatingPanel, Switch, Toast } from 'antd-mobile'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import GoongMap from '~/components/GoongMap/GoongMap'
 import { ExclamationShieldFill, LocationFill, StarOutline } from 'antd-mobile-icons'
 
@@ -45,6 +45,7 @@ export default function RidesPage() {
     mutationFn: getDirection,
     onSuccess: (data) => {
       socket?.emit('acceptTrip', {
+        _id: trip._id,
         passenger: trip.passengerId,
         driverLocation: currentLocation,
         route: data.routes[0].overview_polyline.points
@@ -101,12 +102,17 @@ export default function RidesPage() {
       socket?.on('new-ride-request', (data) => {
         setTrips([...trips, data])
       })
+      socket.on('deleteTrip', (data) => {
+        console.log('ride-canceled', data)
+        setTrips(trips.filter((item) => item._id !== data._id))
+      })
     }
-  }, [socket])
+  }, [socket, trips])
 
   useEffect(() => {
     return () => {
       socket?.off('new-ride-request')
+      socket?.off('deleteTrip')
     }
   }, [])
 

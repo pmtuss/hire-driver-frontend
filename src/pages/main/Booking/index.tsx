@@ -322,14 +322,14 @@ export default function BookingPage() {
           icon: 'success',
           content: 'Huỷ chuyến đi thành công'
         })
+        socket?.emit('cancelTrip', trip)
+
         setOrigin(undefined)
         setDestination(undefined)
         setDirectionsData(undefined)
         setDestinationText('')
         setOriginText('')
         setStatus('')
-
-        socket?.emit('tripCanceled')
       }
     },
     onError: () => {
